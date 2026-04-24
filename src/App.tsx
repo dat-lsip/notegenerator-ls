@@ -302,9 +302,10 @@ export default function NoteGenerator() {
 
       const res = await fetch("https://api.anthropic.com/v1/messages", {
         method: "POST",
-        headers: { "Content-Type": "application/json" ,
-        "anthropic-dangerous-direct-browser-access": "true",
-                 }
+        headers: {
+          "Content-Type": "application/json",
+          "anthropic-dangerous-direct-browser-access": "true",
+        },
         body: JSON.stringify(body),
       });
 
@@ -390,7 +391,7 @@ export default function NoteGenerator() {
       justifyContent: "space-between",
       cursor: "pointer",
     },
-    toggleLeft: { display: "flex", flexDirection: "column", gap: 4 },
+    toggleLeft: { display: "flex", flexDirection: "column", gap: 4, flex: 1 },
     toggleTitle: { fontSize: 13, color: "#c8d8f0", fontWeight: 400 },
     toggleSub: { fontSize: 11, color: "#3a5070" },
     dropzone: (active) => ({
