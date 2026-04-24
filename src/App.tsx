@@ -108,6 +108,7 @@ const fileExtMap = {
 const ALLOWED_EXTS = Object.keys(fileExtMap);
 
 export default function NoteGenerator() {
+  const [apiKey, setApiKey] = useState(() => localStorage.getItem("anthropic_api_key") || "");
   const [companyName, setCompanyName] = useState("");
   const [webSearch, setWebSearch] = useState(true);
   const [granolaLink, setGranolaLink] = useState("");
@@ -244,7 +245,7 @@ export default function NoteGenerator() {
     addFiles(e.dataTransfer.files);
   }, [addFiles]);
 
-  const canGenerate = !!(companyName.trim() || granolaLink.trim() || files.length > 0 || links.some(l => l.trim()));
+  const canGenerate = !!(apiKey.trim() && (companyName.trim() || granolaLink.trim() || files.length > 0 || links.some(l => l.trim())));
 
   const generate = async () => {
     if (!canGenerate || loading) return;
@@ -304,6 +305,8 @@ export default function NoteGenerator() {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          "x-api-key": apiKey.trim(),
+          "anthropic-version": "2023-06-01",
           "anthropic-dangerous-direct-browser-access": "true",
         },
         body: JSON.stringify(body),
@@ -535,6 +538,19 @@ export default function NoteGenerator() {
               <div style={s.eyebrow}>Lightspeed Venture Partners</div>
               <div style={s.title}>Note Generator</div>
             </div>
+          </div>
+
+          {/* API Key */}
+          <div style={s.section}>
+            <label style={s.label}>Anthropic API Key</label>
+            <input
+              style={s.input}
+              type="password"
+              value={apiKey}
+              onChange={(e) => { setApiKey(e.target.value); localStorage.setItem("anthropic_api_key", e.target.value); }}
+              placeholder="sk-ant-…"
+              autoComplete="off"
+            />
           </div>
 
           {/* Company Name */}
